@@ -89,3 +89,32 @@ module.exports = {
 };
 ```
 `rules`中有`test`字段表示该loader是处理什么文件类型的，这里是处理`.css`结尾的文件，`use`字段表示使用什么loader来处理，注意这里的处理顺序是从右往左。
+
+### 处理js
+虽然webpack会JS文件，但是我们常常使用一些ES6的语法，这个时候我们就需要进行转译，我们使用babel-loader来处理
+
+## 插件
+
+有时候我们想根据指定HTML文件来和生成的文件相关联起来，我会用到插件`html-webpack-plugin`
+```js
+let HtmlWebpackPlugin=require("html-webpack-plugin")
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: '[name].js'
+    path: require('path').resolve('/dist')
+  },
+  module: {
+    rules: [
+      {test:/\.css$/, use:["style-loader","css-loader"]}
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "./src/index.html"
+    })
+  ]
+};
+```
+使用插件的时候先将插件导入，然后通过`plugins`字段来配置，插件通过构造函数的形式来生成一个对象，构造函数中接收`filename`文件名`template`模板为参数
