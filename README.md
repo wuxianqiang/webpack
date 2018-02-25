@@ -66,3 +66,26 @@ module.exports = {
 ```
 ## 加载器
 webpack默认只会处理js文件，如个要导入css就要使用到loader处理
+
+### 处理css
+常常我们会在JS文件中导入css，这个时候就需要用到css-loader，但是在页面中还没有添加进来，这个时候就要生成一个`style`标签添加到页面中，需要用到`style-loader`
+```js
+npm install css-loader --save-dev
+npm install style-loader --save-dev
+```
+上面的安装操作完成后，我们就需要在配置文件中配置我们的项目，通过`rules`字段来配置，是一个数组的形式，数组里面是一个个的对象
+```
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: '[name].js'
+    path: require('path').resolve('/dist')
+  },
+  module: {
+    rules: [
+      {test:/\.css$/, use:["style-loader","css-loader"]}
+    ]
+  }
+};
+```
+`rules`中有`test`字段表示该loader是处理什么文件类型的，这里是处理`.css`结尾的文件，`use`字段表示使用什么loader来处理，注意这里的处理顺序是从右往左。
