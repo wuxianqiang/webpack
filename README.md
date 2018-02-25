@@ -44,7 +44,7 @@ module.exports = {
     filename: 'bundle.js'
     path: require('path').resolve('/dist')
   }
-};
+}
 ```
 `path`里面的路径是绝对路径，我们可以导入导入node中`path`默认使用`resolve`方法传入一个相对路径来转为为绝对路径。
 
@@ -62,7 +62,7 @@ module.exports = {
     filename: '[name].js'
     path: require('path').resolve('/dist')
   }
-};
+}
 ```
 ## 加载器
 webpack默认只会处理js文件，如个要导入css就要使用到loader处理
@@ -86,12 +86,28 @@ module.exports = {
       {test:/\.css$/, use:["style-loader","css-loader"]}
     ]
   }
-};
+}
 ```
 `rules`中有`test`字段表示该loader是处理什么文件类型的，这里是处理`.css`结尾的文件，`use`字段表示使用什么loader来处理，注意这里的处理顺序是从右往左。
 
 ### 处理js
-虽然webpack会JS文件，但是我们常常使用一些ES6的语法，这个时候我们就需要进行转译，我们使用babel-loader来处理
+虽然webpack会JS文件，但是我们常常使用一些ES6的语法，使用es6的语法在一个`babel-core`的第三方包中，可是ES6的语法第八版浏览器又不支持，这个时候就要转为浏览器支持的JS代码，需要用到一个第三方库`babel-preset-es2015`，但是ES6的语法是不断更新的，如果你想使用一些新的API，但浏览器又没有部署这些API，我们就要用`babel-preset-stage-0`这个包，里面包含了一些刚提出的API，在webpack中使用`babel-loader`
+```js
+let HtmlWebpackPlugin=require("html-webpack-plugin")
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: '[name].js'
+    path: require('path').resolve('/dist')
+  },
+  module: {
+    rules: [
+      {test:/\.js$/, use:"babel-loader", exclude:/node_modules/}
+      {test:/\.css$/, use:["style-loader","css-loader"]}
+    ]
+  }
+}
+```
 
 ## 插件
 
@@ -115,6 +131,6 @@ module.exports = {
       template: "./src/index.html"
     })
   ]
-};
+}
 ```
 使用插件的时候先将插件导入，然后通过`plugins`字段来配置，插件通过构造函数的形式来生成一个对象，构造函数中接收`filename`文件名`template`模板为参数
